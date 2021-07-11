@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>home</title>
+    <link rel="stylesheet" href="{% static 'css\mystyle.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <script src="js/index.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+        .search{
+        margin-top:60px;
+        margin-left:7px;
+        margin-bottom:37px;
+        }
+        body{
+        background-image: url( "{% static 'images/books.jpg' %}");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        height: 500px;
+        }
+
+        th {
+        height: 40px;
+        background-color: #D2B48C;
+        color: black;
+         }
+
+        td,th {
+        text-align: center;
+        padding: 8px;
+        }
+
+        table, th ,td{
+        border: 3px solid black;
+        border-radius: 5px;
+        }
+
+        table{
+        background-color: white;
+        width: 100%;
+        height: auto;
+        }
+
+        td{
+        color: black;
+
+        }
+
+
+    </style>
+
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">MyBookStore</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Home</a></li>
+      <li><a href="formpage/">ADD_BOOK</a><li/>
+
+    </ul>
+  </div>
+</nav>
+<div class="search">
+   <input class="form-control" id="myInput" type="text" placeholder="Search..">
+</div>
+<div class="Booklist">
+    {% if Book_details %}
+    <table id="table_format">
+        <thead>
+        <th>BookName</th>
+        <th>Author</th>
+        <th>Publisher</th>
+        <th>Publication_year</th>
+        <th>genre
+            <select id='filterText' style='display:inline-block' onchange='filterText()'>
+                <option disabled selected>Select</option>
+                <option value='Action and Adventure'>Action and Adventure</option>
+                <option value='Comics'>Comics</option>
+                <option value='Detective and Mystery'>Detective and Mystery</option>
+                <option value='Fantasy'>Fantasy</option>
+                <option value='Historical Fiction'>Historical Fiction</option>
+                <option value='	Horror'>Horror</option>
+                <option value='romantic'>romantic</option>
+                <option value='all'>All</option>
+            </select>
+        </th>
+        <th>language
+         <select id='lanfilter' style='display:inline-block' onchange='lanfilter()'>
+                <option disabled selected>Select</option>
+                <option value='English'>English</option>
+                <option value='Hindi'>Hindi</option>
+                <option value='Punjabi'>Punjabi</option>
+                <option value='French'>French</option>
+                <option value='All'>All</option>
+            </select>
+        </th>
+
+        <th>Book_description</th>
+
+        {% for liii in Book_details %}
+        <tr  class="content">
+            <td>
+                {{ liii.BookName }}
+            </td>
+            <td>
+                {{ liii.Author }}
+            </td>
+            <td>
+                {{ liii.Publisher }}
+            </td>
+            <td>
+                {{ liii.Publication_year }}
+            </td>
+            <td>
+                {{ liii.genre }}
+            </td>
+            <td>
+                {{ liii.language }}
+            </td>
+            <td>
+                {{ liii.Book_description }}
+            </td>
+        </tr>
+        {% endfor %}
+        </thead>
+    </table>
+    {% else %}
+        <p>NO RECORDS FOUND!!!</p>
+    {% endif %}
+</div>
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#table_format tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+
+function filterText()
+	{
+		var rex = new RegExp($('#filterText').val());
+		if(rex =="/all/"){clearFilter()}else{
+			$('.content').hide();
+			//document.getElementById("filterText").multiple = true;
+			$('.content').filter(function() {
+			return rex.test($(this).text());
+			}).show();
+	}
+	}
+
+function clearFilter()
+	{
+		$('.filterText').val('');
+		$('.content').show();
+	}
+function lanfilter()
+	{
+		var rex = new RegExp($('#lanfilter').val());
+		if(rex =="/all/"){clearFilter()}else{
+			$('.content').hide();
+			$('.content').filter(function() {
+			return rex.test($(this).text());
+			}).show();
+	}
+	}
+
+</script>
+</body>
+</html>

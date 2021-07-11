@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Educational registration form</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <style>
+      body{
+          margin-top: 70px;
+          margin-right: 200px;
+          margin-left: 200px;
+      }
+
+      body, div, form, input, p {
+      outline: none;
+      font-family: Roboto, Arial, sans-serif;
+      font-size: 21px;
+      color: #eee;
+      }
+
+      h1, h2 {
+      font-weight: 400;
+      }
+
+      h2 {
+      margin: 0 0 0 8px;
+      }
+
+      form {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 25px;
+      }
+      .title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      }
+
+      .info {
+      display: flex;
+      flex-direction: column;
+      }
+
+      input {
+      padding: 5px;
+      margin-bottom: 30px;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #eee;
+      }
+
+      input::placeholder {
+      color: #eee;
+      }
+
+      button {
+      padding: 10px 5px;
+      margin-top: 20px;
+      border-radius: 5px;
+      border: none;
+      background: #26a9e0;
+      text-decoration: center;
+      font-size: 15px;
+      font-weight: 400;
+      color: #fff;
+      }
+
+      button {
+      width: 100%;
+      }
+
+    </style>
+</head>
+<body>
+<form action="">
+        <div class="title">
+          <i class="fas fa-pencil-alt"></i>
+          <h2>Fill the Information of Book</h2>
+        </div>
+        <div class="info">
+          <input class="fname" type="text" name="Book Name" placeholder="Full name">
+          <input type="text" name="Author" placeholder="Author">
+          <input type="text" name="Publisher" placeholder="Publisher">
+          <input type="text" name="Publication Year" placeholder="Publication Year">
+           <input type="text" name="Book Description" placeholder="Book Description">
+        </div>
+        <button type="submit" href="">Submit</button>
+      </form>
+
+
+</body>
+</html>
