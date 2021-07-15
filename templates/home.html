@@ -1,14 +1,17 @@
+
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
+<link rel="stylesheet" href="/stylesheets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <head>
-    <meta charset="UTF-8">
-    <title>home</title>
-    <link rel="stylesheet" href="{% static 'css\mystyle.css' %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <meta charset="utf-8">
+    <title>HOME</title>
+        <link rel="stylesheet" href="{% static 'css\mystyle.css' %}">
 
-    <script src="js/index.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
@@ -25,26 +28,42 @@
         background-position: center;
         height: 500px;
         }
+        .dropdown-header{
+        display: revert;
+        padding: 3px 20px;
+        font-size: 12px;
+        line-height: 1.42857143;
+        color: #777;
+        white-space: nowrap;
+        }
 
         th {
-        height: 40px;
+        height: 60px;
         background-color: #D2B48C;
         color: black;
+        margin-bottom: 13px;
+        padding-bottom: 300px;
          }
+
+        thead{
+        padding-bottom: 50px;
+        font-variant-caps: unicase;
+        }
 
         td,th {
         text-align: center;
-        padding: 8px;
+
         }
 
         table, th ,td{
         border: 3px solid black;
         border-radius: 5px;
+        vertical-align: middle;
         }
 
         table{
         background-color: white;
-        width: 100%;
+        width: auto;
         height: auto;
         }
 
@@ -55,9 +74,9 @@
 
 
     </style>
-
 </head>
-<body>
+
+</body>
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container-fluid">
@@ -74,109 +93,114 @@
 <div class="search">
    <input class="form-control" id="myInput" type="text" placeholder="Search..">
 </div>
-<div class="Booklist">
-    {% if Book_details %}
-    <table id="table_format">
+<p style="color:white;"> Note:  Hold down the Ctrl (windows) button to select multiple options.</p>
+    <table class="table table-striped">
         <thead>
         <th>BookName</th>
         <th>Author</th>
         <th>Publisher</th>
         <th>Publication_year</th>
-        <th>genre
-            <select id='filterText' style='display:inline-block' onchange='filterText()'>
-                <option disabled selected>Select</option>
-                <option value='Action and Adventure'>Action and Adventure</option>
-                <option value='Comics'>Comics</option>
-                <option value='Detective and Mystery'>Detective and Mystery</option>
-                <option value='Fantasy'>Fantasy</option>
-                <option value='Historical Fiction'>Historical Fiction</option>
-                <option value='	Horror'>Horror</option>
-                <option value='romantic'>romantic</option>
-                <option value='all'>All</option>
-            </select>
-        </th>
-        <th>language
-         <select id='lanfilter' style='display:inline-block' onchange='lanfilter()'>
-                <option disabled selected>Select</option>
-                <option value='English'>English</option>
-                <option value='Hindi'>Hindi</option>
-                <option value='Punjabi'>Punjabi</option>
-                <option value='French'>French</option>
-                <option value='All'>All</option>
-            </select>
-        </th>
-
+        <th class="dropdown-header"><e>Genre</e></th>
+        <th class="dropdown-header">language</th>
         <th>Book_description</th>
-
+        </thead>
+    <tbody id="myTable">
         {% for liii in Book_details %}
         <tr  class="content">
-            <td>
-                {{ liii.BookName }}
-            </td>
-            <td>
-                {{ liii.Author }}
-            </td>
-            <td>
-                {{ liii.Publisher }}
-            </td>
-            <td>
-                {{ liii.Publication_year }}
-            </td>
-            <td>
-                {{ liii.genre }}
-            </td>
-            <td>
-                {{ liii.language }}
-            </td>
-            <td>
-                {{ liii.Book_description }}
-            </td>
+            <td>{{ liii.BookName }}</td>
+            <td>{{ liii.Author }}</td>
+            <td>{{ liii.Publisher }}</td>
+            <td>{{ liii.Publication_year }}</td>
+            <td data-field-name="genre" >{{ liii.genre }}</td>
+            <td data-field-name="language">{{ liii.language }}</td>
+            <td>{{ liii.Book_description }}</td>
         </tr>
         {% endfor %}
-        </thead>
+    </tbody>
     </table>
-    {% else %}
-        <p>NO RECORDS FOUND!!!</p>
-    {% endif %}
-</div>
+
 <script>
+    (function($) {
+  $.fn.tableFilterHeaders = function(filterFn) {
+    this.each((index, header) => {
+      let $header = $(header),
+          $table = $header.closest('table'),
+          text = $header.text(),
+          colIndex = $header.closest('th').index(),
+          fieldName = $header.attr('data-field-name') || text.toLowerCase(),
+      $select = $('<select multiple>')
+        .data('fieldName', fieldName)
+        //.attr('multiple')
+        .append($('<option>').text(text).val('').prop('disabled', true))
+        .append($('<option>').text('All').val('all'))
+        .append($table.find('tbody tr')
+          .toArray()
+          .map(tr => {
+            return $(tr).find(`td:eq(${colIndex})`).text();
+          })
+          .filter(text => text.trim().length > 0)
+          .sort()
+          .filter((v, i, a) => a.indexOf(v) === i)
+          .map(text => {
+            return $('<option>').text(text).val(text);
+          }));
+      $header.empty().append($select.val('').on('change', filterFn));
+    });
+  };
+  $.fn.initRowClasses = function(oddCls, evenCls) {
+    this.find('tbody tr').each(function(i) {
+      $(this).toggleClass(oddCls, i % 2 == 0).toggleClass(evenCls, i % 2 == 1);
+    });
+  };
+  $.fn.updateRowClasses = function(oddCls, evenCls) {
+    this.find('tbody tr:visible:even').addClass(oddCls).removeClass(evenCls);
+    this.find('tbody tr:visible:odd').addClass(evenCls).removeClass(oddCls);
+  };
+})(jQuery);
+
+$('#myTable').initRowClasses('odd', 'even');
+$('.dropdown-header').tableFilterHeaders(filterText);
+
+function filterText(e) {
+  let $filter = $(e.target),
+      $table = $filter.closest('table'),
+      $filters = $table.find('.dropdown-header select'),
+  filterObj = $filters.toArray().reduce((obj, filter) => {
+    let $filter = $(filter);
+    return Object.assign(obj, { [$filter.data('fieldName')] : $filter.val() });
+  }, {});
+  if ($filter.val() === 'all') {
+    $filter.val('')
+  }
+  $table.find('tbody tr').each(function () {
+  $(this).toggle($(this).find('td').toArray().every(td => {
+    let $td = $(td), fieldName = $td.attr('data-field-name');
+    if (fieldName != null) {
+      if (Array.isArray(filterObj[fieldName])) {
+        return filterObj[fieldName].length === 0 ||
+          filterObj[fieldName].indexOf('all') >= 0 ||
+          filterObj[fieldName].indexOf($td.text()) >= 0;
+      }
+      return filterObj[fieldName] === null ||
+        filterObj[fieldName] === '' ||
+        filterObj[fieldName] === 'all' ||
+        filterObj[fieldName] === $td.text();
+    }
+    return true;
+  }));
+});
+
+  $table.updateRowClasses('odd', 'even');
+}
+//search
 $(document).ready(function(){
   $("#myInput").on("keyup", function() {
     var value = $(this).val().toLowerCase();
-    $("#table_format tr").filter(function() {
+    $("#myTable tr").filter(function() {
       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
   });
 });
-
-function filterText()
-	{
-		var rex = new RegExp($('#filterText').val());
-		if(rex =="/all/"){clearFilter()}else{
-			$('.content').hide();
-			//document.getElementById("filterText").multiple = true;
-			$('.content').filter(function() {
-			return rex.test($(this).text());
-			}).show();
-	}
-	}
-
-function clearFilter()
-	{
-		$('.filterText').val('');
-		$('.content').show();
-	}
-function lanfilter()
-	{
-		var rex = new RegExp($('#lanfilter').val());
-		if(rex =="/all/"){clearFilter()}else{
-			$('.content').hide();
-			$('.content').filter(function() {
-			return rex.test($(this).text());
-			}).show();
-	}
-	}
-
 </script>
 </body>
 </html>
